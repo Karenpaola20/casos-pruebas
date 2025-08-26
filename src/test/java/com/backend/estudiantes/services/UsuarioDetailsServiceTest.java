@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-@ExtendWith(MockitoExtension.class) // habilitar mockito para las pruebas
+@ExtendWith(MockitoExtension.class)
 public class UsuarioDetailsServiceTest {
 
     @Mock
@@ -31,7 +31,6 @@ public class UsuarioDetailsServiceTest {
 
         String emailInexistente = "noexiste@email.test.com";
 
-        //simulacion de optional vacio
         when(usuarioRepository.findByEmail(emailInexistente)).thenReturn(Optional.empty());
 
         assertThrows(
@@ -45,7 +44,6 @@ public class UsuarioDetailsServiceTest {
 
     @Test
     public void cuandoUsuarioExiste_retornaUserDetailsCorrecto() {
-
         String email = "testuserencontrado@gmail.com";
         String password = "password123";
         Role rol = Role.ADMIN;
@@ -59,13 +57,16 @@ public class UsuarioDetailsServiceTest {
 
         UserDetails userDetails = usuarioDetailsService.loadUserByUsername(email);
 
-        //verificando que no sea nulo
-        assertNull(userDetails);
+        assertNotNull(userDetails, "El UserDetails no debería ser nulo");
         assertEquals(email, userDetails.getUsername());
         assertEquals(password, userDetails.getPassword());
-        //AUTORIDAD DE SPRING SECURITY ROLE_ADMIN
+
         assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + rol.name()))
+                        .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + rol.name())),
+                "Debería tener el rol ROLE_ADMIN"
         );
+
+        // Verificar que el repositorio fue llamado
+        verify(usuarioRepository, times(1)).findByEmail(email);
     }
 }

@@ -16,11 +16,10 @@ public class UsuarioRepositoryTest {
 
 
     @Autowired
-    private UsuarioRepository repository; //inyeccion de depencias para poder usar y hacer los test
+    private UsuarioRepository repository;
 
     @Test
     void findByEmail_UsuarioExistente_RetornaUsuario() {
-        //contructor de usuario
 
         Usuario testUser = new Usuario(
                 "Test",
@@ -31,19 +30,14 @@ public class UsuarioRepositoryTest {
         );
 
 
-        //guardando usuario temporalmente
         Usuario guardado = repository.save(testUser);
 
-        //estamos haciendo busqueda y devolviendolo en un optinal
         Optional<Usuario> encontradoOptional = repository.findByEmail(guardado.getEmail());
 
-        //validando por si falla
         assertTrue(encontradoOptional.isPresent(), "EL Usuario deberia existrir en la base de datos.");
 
-        //obtener realmente el suuario
         Usuario encontrado = encontradoOptional.get();
 
-        //comporando emails, a ver si coinciden.
         assertEquals("test@unicolombo.edu.co", encontrado.getEmail(),
                 "El email del usuario encontrado deberia coincidir con el de prueba");
 

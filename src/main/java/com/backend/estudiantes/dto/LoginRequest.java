@@ -12,6 +12,15 @@ public class LoginRequest {
     @NotBlank(message = "La contraseña es obligatorio")
     private String password;
 
+    // ✅ Constructor vacío
+    public LoginRequest() {}
+
+    // ✅ Constructor con argumentos
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
